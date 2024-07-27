@@ -1,0 +1,245 @@
+{% extends 'myapp/parking.html' %}
+{% load static %}
+
+{%block cssa%}
+{% comment %} this css for only image predict and detect field {% endcomment %}
+.image-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    justify-items: center;
+    align-items: center;
+
+}
+.default-image {
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+
+}
+.hero{
+    width:100%;
+    height:100vh:
+    background:#d1d1d1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+}
+label{
+    display:block;
+    width:200px;
+    background:#e3362c;
+    color:#fff;
+    padding:12px;
+    margin:10px auto;
+    border-radius:5px;
+    cursor:pointer;
+    align-items:center;
+
+}
+
+.card{
+    width:400px auto;
+    background:#fff;
+    padding:40px;
+    border-radius:15px;
+    text-align:center;
+    color:#333;
+}
+.card img{
+    width:180px;
+    height:180px;
+    border-radius:20%;
+    margin-top:40px;
+    margin-bottom:30px;
+
+}
+.default-image {
+    transition: all 0.3s ease; /* Smooth transition for all properties */
+}
+
+.default-image:hover {
+    opacity: 0.8; /* Slightly reduce opacity on hover */
+    border: 2px solid black; /* Add a border on hover */
+    cursor: pointer; /* Change cursor to pointer */
+}
+
+.grid-image img {
+    width: 300px;
+    height: 241px;
+    border-radius: 8px;
+    display: block; /* Ensure image is centered */
+    margin: 0 auto; /* Center image horizontally */
+    object-fit: cover;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+}
+
+.grid-container {
+    background-color: white;
+    border-radius: 10px;
+    padding: 16px;
+    font-weight: 700;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    /* max-width: 46%; */
+    width: 45%;
+    overflow: auto;
+    margin: 1px auto 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 250px 74px;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+}
+.button-container {
+    display: flex; /* Use flexbox for button alignment */
+    justify-content: center; /* Center buttons horizontally */
+    gap: 10px; /* Adjust as needed */
+}
+
+.button-container form {
+    margin: 7px; /* Remove default form margin */
+}
+
+.button-container button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in;
+}
+
+.btn-danger {
+    background-color: red;
+    color: white;
+}
+
+.btn-success {
+    background-color: green;
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: darkred;
+}
+.btn-success:hover {
+    background-color: darkgreen;
+}
+
+{%endblock%}
+{% block tasbir %} 
+    {% if user.tasbir %}
+        <div class="grid-container">
+            <div class="grid-image">
+                <img src="{{ request.user.tasbir.tasbir.url }}" alt="User Photo">
+            </div>
+            <div class="button-container">
+                <form method="POST" action="{% url 'delete_photo' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <button type="submit" name="delete_photo" class="btn-danger">Delete image</button>
+                </form>
+                <form method="POST" action="{% url 'predict_photo' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <button type="submit" name="predict_photo" class="btn-success">Predict image</button>
+                </form>
+            </div>
+            
+        </div>
+    
+    {% else %}
+
+        {% if error_message %}
+            <div class="alert alert-danger" role="alert">
+                {{ error_message }}
+            </div>
+        {% endif %}    
+        <div class="container mt-5">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="d-flex flex-column align-items-center">
+                        <div class="hero">
+                            <div class="card">
+                                <form id="uploadFor" method="POST" action="{% url 'upload_photo' %}" enctype="multipart/form-data">
+                                    {% csrf_token %}
+        
+        
+                                    {{tasbir_form.asp}}
+                                    <div class="form-grou">
+                                        {% comment %} <label for="id_tasbir" class="tasbir-label">Tasbir:</label> {% endcomment %}
+                                        <div class="image-grid">
+                                            <div>
+                                            <img id="defaultImage" src="{% static 'myapp/images/car-check.png' %}" alt="Default Image" onclick="document.getElementById('id_tasbir').click();" class="default-image">
+                                            <h1>Device</h1>
+                                            </div>
+                                            <div>
+                                            <a href="{% url 'webcam' %}">
+                                                <img id="defaultImage1" src="{% static 'myapp/images/cammm.png' %}" alt="Default Image" class="default-image">
+                                            </a>
+                                            <h1>camera</h1>
+                                            </div>
+                                        </div>
+                                        {% comment %} <label for='id_tasbir' >Update image</label> {% endcomment %}
+                                        <input type="file"  name="tasbir" id="id_tasbir" class="form-control" accept="image/*" style="display: none;" onchange="previewImage(event);">
+                                        <button type="submit" name="upload_photo" class="btn btn-success mb-3" style="display: none;">Upload Photo</button>
+
+                            </div>
+                        </div>
+
+
+                        {% comment %}<form id="uploadForm" method="POST" action="{% url 'upload_photo' %}" enctype="multipart/form-data">
+                            {% csrf_token %}
+
+
+                            {{tasbir_form.asp}}
+                            <div class="form-group">
+                                {% comment %} <label for="id_tasbir" class="tasbir-label">Tasbir:</label> {% endcomment %}
+                                {% comment %}<img id="defaultImage"  src={% static 'myapp/images/car-check.png' %} alt="Default Image" onclick="document.getElementById('id_tasbir').click();" class="default-image">
+                                <input type="file" name="tasbir" id="id_tasbir" class="form-control" style="display: none;" accept="image/*" onchange="previewImage(event);">
+                            </div>
+                            {% comment %} {% if tasbir_form %}
+                                <div class="form-group">
+                                    <label for="id_tasbir" class="tasbir-label">Tasbir:</label>
+                                    <input type="file" name="tasbir" id="id_tasbir" class="form-control" placeholder="Custom Placeholder Text">
+                                </div>
+                                <button type="submit" name="upload_photo" class="btn btn-success mb-3">Upload Photo</button>
+                                {% comment %} <button type="submit" name="upload_photo" class="btn btn-success mb-3">capture Photo</button> {% endcomment %}
+                                {% comment %} <a href="{% url 'webcam' %}" class="btn btn-success mb-3">capture image</a>
+
+                            {% endif %} {% endcomment %}
+                        </form>                     
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <script>
+        document.getElementById("uploadFor").addEventListener("submit", function(event) {
+            var inputFile = document.getElementById("id_tasbir");
+            if (inputFile.files.length === 0) {
+                alert("Please select an image before uploading.");
+                event.preventDefault();
+            }
+        });
+
+        document.getElementById('id_tasbir').addEventListener('change', function() {
+            autoSubmitForm();
+        });
+    
+        function autoSubmitForm() {
+            document.getElementById('uploadFor').submit();
+        }
+        
+        {% comment %} document.getElementById('id_tasbir1').addEventListener('change', function() {
+            autoSubmiForm();
+        });
+    
+        function autoSubmiForm() {
+            document.getElementById('web').submit();
+        } {% endcomment %}
+
+    </script>
+    {% endblock %}

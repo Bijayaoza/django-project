@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Capture Image</title>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background: #7abecc !important;
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .button-container button,
+        .button-container form button {
+            width: 108px;
+            height: 45px;
+            font-size: 14px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+        }
+        .button-container button:hover,
+        .button-container form button:hover {
+            background-color: #45a049;
+        }
+        .grid-image img {
+            width: 100%;
+            max-width: 640px;
+            height: auto;
+            border-radius: 8px;
+            display: block;
+            margin: 0 auto;
+            object-fit: cover;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .grid-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 16px;
+            font-weight: 700;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            width: 45%;
+            overflow: auto;
+            margin: 1px auto 0;
+            display: grid;
+            grid-template-rows: auto auto;
+            gap: 0px;
+            align-items: center;
+            justify-items: center;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        #video, #canvas, #preview {
+            border: 2px solid #ccc;
+            margin-bottom: 10px;
+            display: block;
+            max-width: 100%;
+        }
+        #upload-form {
+            margin: 0;
+            padding: 0;
+        }
+        #recapture {
+            display: none;
+            background-color: #f44336;
+        }
+        #recapture:hover {
+            background-color: #e53935;
+        }
+        #home-link {
+            margin-top: 20px;
+            font-size: 36px;
+            text-decoration: none;
+            color: inherit;
+        }
+    </style>
+</head>
+<body>
+    <a id="home-link" href="/">WeLcoMe To The Traffic Controller</a>
+    <h1>Capture Image</h1>
+
+    <div class="grid-container">
+        <div class="grid-image">
+            <video id="video" width="640" height="480" autoplay></video>
+            <canvas id="canvas" style="display:none;"></canvas>
+            <img id="preview" style="display:none;" />
+        </div>
+        <div class="button-container">
+            <button id="snap">Snap</button>
+            <button id="recapture">Recapture</button>
+            <form id="upload-form" method="POST" action="{% url 'capture_image' %}">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="hidden" name="image" id="image">
+                <button type="submit">Upload</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Access the camera
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+        const snap = document.getElementById('snap');
+        const recapture = document.getElementById('recapture');
+        const imageInput = document.getElementById('image');
+        const preview = document.getElementById('preview');
+
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then((stream) => {
+                video.srcObject = stream;
+            })
+            .catch((err) => {
+                console.error("Error accessing the camera: ", err);
+            });
+
+        // Capture the image and show preview
+        snap.addEventListener('click', () => {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const dataURL = canvas.toDataURL('image/png');
+            preview.src = dataURL;
+            preview.style.display = 'block';
+            video.style.display = 'none';
+            snap.style.display = 'none';
+            recapture.style.display = 'block';
+            imageInput.value = dataURL;
+        });
+
+        // Recapture the image
+        recapture.addEventListener('click', () => {
+            video.style.display = 'block';
+            snap.style.display = 'block';
+            recapture.style.display = 'none';
+            preview.style.display = 'none';
+        });
+    </script>
+</body>
+</html>

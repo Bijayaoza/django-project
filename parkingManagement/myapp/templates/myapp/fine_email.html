@@ -1,0 +1,32 @@
+{% extends 'myapp/base.html' %}
+{% block title %} Fine Details {% endblock %}
+{% block csss %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'myapp/css/fine.css' %}">
+{% endblock %}
+{% block content %}
+    <h1>Fine Details</h1>
+    <p>Dear {{ owner_name }},</p>
+    <p>This is to inform you that a fine has been imposed on the vehicle with the following details:</p>
+    <ul>
+        <li>Vehicle Number: {{ vehicle_number }}</li>
+        <li>Owner's Email: {{ owner_email }}</li>
+        <li>Location: {{ location }}</li>
+        <li>Time: {{ time }}</li>
+        <li>Fine Types:</li>
+        <ul>
+            {% for fine_type in fine_types %}
+                <li>{{ fine_type }}</li>
+            {% endfor %}
+            {% if other_fine %}
+                <li>{{ other_fine }}</li>
+            {% endif %}
+        </ul>
+        <li>Fine Reason: {{ fine_reason }}</li>
+        <li>Total Amount: {{ common_amount }}</li>
+        <li>Charged by Officer: {{ traffic_officer.username }}</li>
+    </ul>
+    <p>Please take necessary action to resolve this fine.</p>
+    <p>Regards,<br>
+    Traffic Management Team</p>
+{% endblock %}

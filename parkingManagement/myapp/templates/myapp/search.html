@@ -1,0 +1,147 @@
+{% extends 'myapp/parking.html' %}
+{% load static %}
+{% block cssa %}
+
+    .grid-container {
+        border-radius: 10px;
+        padding: 30px;
+        font-weight: 700;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        max-width: 80%;
+        width: 80%;
+        overflow: auto;
+        margin: 1px auto 0;
+        background-color: white;
+        display: grid;
+        grid-template-columns: 0.4fr 0.6fr;
+        grid-auto-rows: auto;
+        border-collapse: collapse;
+        width: 88%;
+        color: black;
+        padding-bottom: 10px;
+
+    }
+
+    .grid-container > div:not(:last-child) {
+        border: 1px solid black; /* Add border around each cell */
+        padding: 5px; /* Add padding for better readability */
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        
+    }
+
+    .category {
+        grid-column: 1; /* Place category in first column */
+    }
+
+    .value {
+        grid-column: 2; /* Place value in second column */
+        text-align: left;
+    }
+
+    /* Style for first row */
+    .grid-container > div:nth-child(-n+2) {
+        background-color: blue;
+        color: white;
+    }
+
+    .grid-container > div:not(:nth-child(-n+2)):not(:last-child) {
+        background-color: lightblue;
+    }
+    .grid-container button {
+        justify-self: center;
+    }
+    
+
+    button, [type=button], [type=reset], [type=submit] {
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease-in;
+        {% comment %} margin-top: 26px; {% endcomment %}
+    }
+    .btn-danger {
+        background-color: red;
+        color: white;
+    }
+    .btn-danger:hover {
+        background-color: darkred;
+    }
+    .grid-container > div:last-child button {
+        margin-top: 26px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+
+    }
+
+    
+{% endblock %}
+
+{% block search %}
+{% if request.method == 'POST' and form.errors.vehicle_no %}
+    <p class="text-danger mt-2">{{ form.errors.vehicle_no.0 }}</p>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+
+{% if original_vehicle_no %}
+    {% if park_entry %}
+        <p>Data matched for '{{ original_vehicle_no }}': {{ park_entry.noplate }}</p>
+        <!-- Display other details of the matched entry as a table -->
+        <div class="grid-container">
+            <div class='category'>Data Category</div>
+            <div class='value'>Data Value</div>
+
+            <div class='category'>No Plate:</div>
+            <div class='value'>{{ park_entry.noplate }}</div>
+
+            <div class='category'>Engine Number:</div>
+            <div class='value'>{{ park_entry.engine_number }}</div>
+
+            <div class='category'>Chassis Number:</div>
+            <div class='value'>{{ park_entry.chassis_number }}</div>
+
+            <div class='category'>Insurance Details:</div>
+            <div class='value'>{{ park_entry.insurance_details }}</div>
+
+            <div class='category'>Contact Number:</div>
+            <div class='value'>{{ park_entry.contact_number }}</div>
+
+            <div class='category'>Email Address:</div>
+            <div class='value'>{{ park_entry.email_address }}</div>
+
+            <div class='category'>Vehicle Owner:</div>
+            <div class='value'>{{ park_entry.owner }}</div>
+
+            <div class='category'>Category:</div>
+            <div class='value'>{{ park_entry.category }}</div>
+
+            <div class='category'>Vehicle Color:</div>
+            <div class='value'>{{ park_entry.color }}</div>
+
+            <div class='category'>Bluebook Expiry Date:</div>
+            <div class='value'>{{ park_entry.bluebook_expiry_date }}</div>
+            <div class='value'> 
+            <form method="post" action="{% url 'choose_fine_types' %}">
+                {% csrf_token %}
+                <!-- Add hidden fields to pass vehicle number and owner's email address -->
+                <input type="hidden" name="vehicle_number" value="{{ original_vehicle_no }}">
+                <input type="hidden" name="owner_email" value="{{ park_entry.email_address }}">
+                <input type="hidden" name="owner_name" value="{{ park_entry.car_owner }}">
+    
+                <button class="btn-danger" type="submit">Issue Fine</button>
+            </form>
+            </div>
+
+            
+        </div>
+        
+        
+        
+    {% else %}
+        <p>Data doesn't match for '{{ original_vehicle_no }}'.</p>
+    {% endif %}
+{% endif %}
+{% endblock %}
+

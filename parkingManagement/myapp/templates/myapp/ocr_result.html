@@ -1,0 +1,149 @@
+{%extends 'myapp/parking.html'%}
+{% load static %}
+{% block cssa %}
+
+    .grid-image img {
+        width: 300px;
+        height: 170px;
+        border-radius: 8px;
+        margin-left: auto;
+        margin-right: auto;
+        object-fit: cover; /* Ensure the image covers the entire container while maintaining its aspect ratio */
+    }
+    
+    .grid-container {
+        background-color: white;
+        border-radius: 10px;
+        padding: 18px; /* Increased padding */
+        font-weight: 700;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        max-width: 100%;
+        width: 80%; /* Adjust as needed */
+        overflow: auto; /* Add scrollbar when content exceeds container */
+        margin: 1px auto 0; /* Center horizontally and add top margin */
+        display: grid; /* Use CSS grid */
+        grid-template-columns: 1fr; /* Single column layout */
+        grid-template-rows: 170px 100px 52px 116px 36.77px 51px;
+        gap: 0px; /* Gap between items */
+        align-items: center; /* Center items vertically */
+        justify-content: center; /* Center items horizontally */
+    }
+
+    .form-container {
+        grid-row: 2; /* Position the form container in the second row */
+        display: grid; /* Use CSS grid */
+        grid-template-columns: 1fr auto; /* Two columns: one for input, one for button */
+        gap: 10px; /* Gap between items */
+        align-items: center; /* Center items vertically */
+    }
+
+    input[type="search"] {
+        padding: 10px;
+        width: 100%; /* Full width input */
+        box-sizing: border-box;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+        background-color: rgb(215, 236, 241);
+        border: 1px solid transparent; /* Added border */
+        outline: none;
+        text-align: center; /* Align the text in the middle */
+        font-weight: bold;
+    }
+
+    button.btn-search {
+        padding: 10px 20px; /* Adjusted padding */
+        font-size: 16px;
+        background-color: blue !important; /* Added !important to override Bootstrap */
+        border: none;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease-in;
+        margin-left: 2px;
+        margin-top: 24px;
+    }
+
+    button.btn-search:hover {
+        background-color: darkblue !important; /* Darker color on hover */
+    }
+
+    h1, p {
+        text-align: center; /* Center align text */
+        font-weight: bold; /* Make text bold */
+        font-size: 24px; /* Adjust font size as needed */
+    }
+    p {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    .errorlist li {
+        list-style-type: none;
+        color: rgb(243, 16, 129);
+    }
+
+    label {
+        display: inline-block;
+        margin-left: 146px;
+    }
+    #uploadForm input[type="file"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+        font-weight: 700;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+{% endblock %}
+
+
+
+
+{% block ocr %}
+    {% if ocrText %}
+        <div class="grid-container">
+            <div class="grid-image">
+                <img src="{{request.user.tasbir.tasbir.url}}"  alt="Image">
+            </div>
+            <h1 class="header">OCR Results</h1>
+            <form id="ocrForm" class="form-container" role="search" method="POST" action="{% url 'search_view' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="ocr_text">OCR Text</label>
+                    <input class="form-control me-2" type="search" id="ocr_text" name="ocr_text" value="{{ ocrText }}" placeholder="OCR Text" aria-label="OCR Text">
+                </div>
+                <button class="btn btn-outline-success btn-search" type="button" onclick="updateNavbarSearch();">Search OCR</button>
+            </form>
+            <div class="ocr-confidences">
+                <p>OCR Confidences:</p>
+                <ul>
+                    {% for confidence in ocrConfidences %}
+                        <li>{{ confidence }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <h1>TensorFlow License Plate Confidence</h1>
+            <ul>
+                {% for result in tensorflowResults %}
+                    <li>{{ result.confidence }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block javascript %}
+<script>
+    function updateNavbarSearch() {
+        // Get the value from the OCR search input
+        var ocrSearchInput = document.querySelector('#ocrForm input[name="ocr_text"]');
+        // Get the navbar search input
+        var navbarSearchInput = document.getElementById('navbarSearchInput');
+        // Update the value of the navbar search input
+        navbarSearchInput.value = ocrSearchInput.value;
+        // Submit the navbar search form
+        document.getElementById('navbarSearchButton').click();
+    }
+</script>
+{% endblock %}

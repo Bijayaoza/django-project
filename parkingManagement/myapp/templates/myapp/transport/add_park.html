@@ -1,0 +1,95 @@
+{% extends 'myapp/parking.html' %}
+{%block title%}Transportation Department{%endblock%}
+{% load static %}
+{%block cssa%}
+.grid-container {
+    background-color: white;
+    border-radius: 10px;
+    padding: 50px; /* Increased padding */
+    font-weight: 700;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    max-width: 100%;
+    width: 80%; /* Adjust as needed */
+    overflow: auto; /* Add scrollbar when content exceeds container */
+    margin: 50px auto 0; /* Center horizontally and add top margin */
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 20px; /* Added margin */
+}
+
+.form-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 5px;
+}
+
+.form-group {
+    width: 100%;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 10px; /* Increased margin */
+}
+
+.checkbox-group label {
+    display: inline-block;
+    margin-right: 10px; /* Added margin to separate checkboxes */
+    font-size: 16px; /* Increase font size */
+}
+
+input[type="checkbox"] {
+    margin-right: 5px; /* Added margin to separate checkboxes */
+    width: 20px; /* Increase checkbox width */
+    height: 20px; /* Increase checkbox height */
+    vertical-align: middle; /* Align checkboxes vertically */
+}
+
+input,
+select,
+textarea {
+    width: calc(100% - 20px); /* Adjust width to account for padding and margins */
+    padding: 10px;
+    box-sizing: border-box;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    border: none;
+    outline: none;
+}
+
+button {
+    grid-column: span 3; /* Make button span three columns */
+    padding: 15px;
+    font-size: 16px;
+    background-color: rgb(106, 106, 244);
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in;
+}
+
+button:hover {
+    background-color: rgb(85, 85, 248);
+}
+
+.errorlist li {
+    list-style-type: none;
+    color: rgb(243, 16, 129);
+}
+
+
+{% endblock %}
+
+{% block transport %}
+<div class="grid-container">
+    <h1 class="header">Add owner details</h1>
+    <form method="post" action='' class="form-container">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save</button>
+    </form>
+</div>
+{%endblock%}

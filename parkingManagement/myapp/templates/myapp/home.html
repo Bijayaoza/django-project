@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <title>Document</title>
+
+    <style>
+        .log{
+            size: 10px; 
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+    {{name}}
+<div class="log">
+    <a class="log" href="{% url 'login' %}" >logIn</a>
+</div>
+    {% block content %}
+    {% comment %} {% include "" %} {% endcomment %}
+    {% endblock %}
+
+</body>
+</html>

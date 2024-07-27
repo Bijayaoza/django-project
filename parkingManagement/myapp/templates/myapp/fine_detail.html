@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fine Details</title>
+</head>
+<body>
+    <h1>Fine Details</h1>
+    <table border="1">
+        <tr>
+            <th>Traffic Officer</th>
+            <th>Vehicle Number</th>
+            <th>Owner Email</th>
+            <th>Owner Name</th>
+            <th>Location</th>
+            <th>Time</th>
+            <th>Fine Types</th>
+            <th>Other Fine</th>
+            <th>Common Amount</th>
+            <th>Fine Reason</th>
+            <th>Created At</th>
+            <th>Paid</th>
+        </tr>
+        {% for fine in fines %}
+        <tr>
+            <td>{{ fine.traffic_officer }}</td>
+            <td>{{ fine.vehicle_number }}</td>
+            <td>{{ fine.owner_email }}</td>
+            <td>{{ fine.owner_name }}</td>
+            <td>{{ fine.location }}</td>
+            <td>{{ fine.time }}</td>
+            <td>{{ fine.fine_types }}</td>
+            <td>{{ fine.other_fine }}</td>
+            <td>{{ fine.common_amount }}</td>
+            <td>{{ fine.fine_reason }}</td>
+            <td>{{ fine.created_at }}</td>
+            <td>
+                <form method="POST" action="{% url 'update_paid' fine.pk %}">
+                    {% csrf_token %}
+                    <input type="checkbox" name="paid" {% if fine.paid %}checked{% endif %}>
+                    <input type="submit" value="Save">
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

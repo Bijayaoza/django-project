@@ -1,0 +1,67 @@
+{% extends 'myapp/base.html' %}
+{% block title %} Issue Fine {% endblock %}
+{% block csss %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'myapp/css/fine.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="grid-container">
+        <div class="header">
+            <h1>Choose Fine Types</h1>
+        </div>
+        <form method="post" action="{% url 'confirm_fines' %}" class="form-container">
+            {% csrf_token %}
+            <!-- Display form errors if any -->
+            {% if form.errors %}
+                <ul>
+                    {% for field, error_list in form.errors.items %}
+                        {% for error in error_list %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <div class="form-group">
+                <label for="vehicle_number">Vehicle Number:</label>
+                <input type="text" id="vehicle_number" name="vehicle_number" value="{{ form.vehicle_number.value }}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="owner_email">Owner's Email:</label>
+                <input type="email" id="owner_email" name="owner_email" value="{{ form.owner_email.value }}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="location">Location:</label>
+                <input type="text" id="location" name="location" placeholder="Enter location..." value="">
+            </div>
+            <div class="form-group">
+                <label for="fine_types">Select Fine Types:</label>
+                <div class="checkbox-group">
+                    {% for value, label in form.fine_types.field.choices %}
+                        <label>
+                            <input type="checkbox" name="fine_types" value="{{ value }}">
+                            {{ label }}
+                        </label>
+                    {% endfor %}
+                </div>
+            </div>
+            <!-- Reason field after checkbox group -->
+            <div class="form-group">
+                <label for="fine_reason">Reason:</label>
+                <input type="text" id="fine_reason" name="fine_reason" placeholder="Enter reason..." value="">
+            </div>
+            <div class="form-group">
+                <label for="time">Time:</label>
+                <input type="time" id="time" name="time" value="{{ form.time.value }}">
+            </div>
+            <div class="form-group">
+                <label for="other_fine">Other Fine Types:</label>
+                <textarea id="other_fine" name="other_fine" rows="4" cols="50" placeholder="Enter other fine types..."></textarea>
+            </div>
+            <div class="form-group">
+                <label for="common_amount">Total Amount:</label>
+                <input type="text" id="common_amount" name="common_amount" placeholder="Amount" value="">
+            </div>
+            <button type="submit">Confirm Fines</button>
+        </form>
+    </div>    
+{% endblock %}

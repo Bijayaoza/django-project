@@ -1,0 +1,82 @@
+html{
+    height: 100px;
+    font-family: sans-serif;
+
+}
+body{
+    background: linear-gradient(to bottom,transparent,rgb(131, 131, 235));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+form{
+    background-color:white;
+    border-radius:5%;
+    padding: 2rem;
+    font-weight: 700;
+    box-shadow:0 0 10px rgba(0,0, 0, 0.3) ;
+    
+    margin:0  auto;
+    width: 300px;
+}
+form input,
+form select,
+form textarea{
+width:  100%;
+margin-bottom:10px ;
+padding: 10px;
+box-sizing: border-box;
+box-shadow: 0 0 5px rgba(0, 0,0,0.3);
+border: none;
+padding: 1em;
+outline: none; /* Add this line */
+
+}
+
+form button{
+    display:block;
+    width: 100%;
+    padding:15px;
+    font-size: 16px;
+    background-color: rgb(106, 106, 244);
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in;
+
+}
+form button:hover{
+    background-color: rgb(85, 85, 248);
+}
+
+form .errorlist li{
+    list-style-type: none;
+    color: rgb(243, 16, 129);
+
+}
+.container {
+    text-align: center;
+    padding: 20px;
+}
+
+.container p {
+    color: #333;
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.container a.login-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.container a.login-button:hover {
+    background-color: #0056b3;
+}
